@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All That Follows</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: 'Fixedsys', monospace;
+            font-size: 18px;
+            color: #32CD32;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .typewriter {
+            white-space: pre-wrap;
+            overflow: hidden;
+            border-right: 2px solid #32CD32;
+            width: fit-content;
+        }
+
+        .welcome-message, .warning-message {
+            visibility: hidden;
+        }
+
+        .spacer {
+            height: 40px; /* Adjust height to control spacing */
+        }
+
+        .inbox-link {
+            color: #32CD32;
+            text-decoration: none;
+            cursor: pointer;
+            font-family: 'Fixedsys', monospace;
+            font-size: 18px;
+        }
+
+        .inbox-link.hidden, .message-link.hidden {
+            visibility: hidden;
+        }
+
+        .back-button {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: transparent;
+            border: 1px solid #32CD32;
+            color: #32CD32;
+            font-family: 'Fixedsys', monospace;
+            font-size: 18px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            background-color: #32CD32;
+            color: black;
+        }
+
+        .inbox-page, .message-page {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome message in the top-left -->
+    <div class="typewriter" id="welcomeMessage">WELCOME,</div>
+
+    <!-- Blank lines for spacing -->
+    <div class="spacer"></div>
+
+    <!-- Warning message 5 lines underneath the welcome message -->
+    <div class="typewriter" id="warningMessage">
+        ***WIDESPREAD UPRISING, CAUTION SHOULD BE TAKEN. <br>
+        THEY ARE ALL THAT FOLLOWS***
+    </div>
+
+    <!-- More blank lines for spacing -->
+    <div class="spacer"></div>
+
+    <!-- Mid-left Inbox link -->
+    <a class="inbox-link hidden" id="inboxLink" onclick="showInboxPage()">INBOX: 1 NEW MESSAGE</a>
+
+    <!-- Inbox page with message in the center -->
+    <div class="inbox-page" id="inboxPage">
+        <div>
+            <p>Message from All That Follows:</p>
+            <a class="inbox-link message-link" id="messageLink" onclick="showMessagePage()">Subject: Can you hear it...?</a>
+        </div>
+    </div>
+
+    <!-- Message page with audio playing -->
+    <div class="message-page" id="messagePage">
+        <div>
+            <p>Now playing: Can you hear it...</p>
+        </div>
+    </div>
+
+    <!-- Back button -->
+    <button class="back-button" id="backButton" onclick="goBack()">Back</button>
+
+    <!-- Hidden audio file -->
+    <div class="audio-container" id="audioContainer">
+        <audio id="audioMessage">
+            <source src="/mnt/data/exp.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <script>
+        function typeWriter(element, text, delay, callback) {
+            let i = 0;
+            element.innerHTML = '';
+            element.style.visibility = 'visible';
+            let interval = setInterval(() => {
+                element.innerHTML += text[i];
+                i++;
+                if (i >= text.length) {
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
+            }, delay);
+        }
+
+        function showInboxPage() {
+            document.getElementById("inboxPage").style.display = 'flex';
+            document.getElementById("backButton").style.display = 'block';
+            document.querySelector('.typewriter').style.display = 'none';
+            document.getElementById("inboxLink").style.display = 'none';
+        }
+
+        function showMessagePage() {
+            document.getElementById("inboxPage").style.display = 'none';
+            document.getElementById("messagePage").style.display = 'flex';
+            
+            var audio = document.getElementById("audioMessage");
+            audio.play();
+        }
+
+        function goBack() {
+            location.reload();
+        }
+
+        // Start the typewriter effect for the welcome message, then the warning message, then the inbox link
+        window.onload = function() {
+            typeWriter(
+                document.getElementById('welcomeMessage'),
+                'WELCOME,',
+                100,
+                function() {
+                    typeWriter(
+                        document.getElementById('warningMessage'),
+                        '***WIDESPREAD UPRISING, CAUTION SHOULD BE TAKEN. THEY ARE ALL THAT FOLLOWS***',
+                        50,
+                        function() {
+                            document.getElementById('inboxLink').classList.remove('hidden');
+                        }
+                    );
+                }
+            );
+        };
+    </script>
+
+</body>
+</html>
